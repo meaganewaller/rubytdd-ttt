@@ -1,0 +1,31 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/Users/meaganwaller/rubytic/spec/lib/ttt_spec.rb": [
+        1,
+        null,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null
+      ],
+      "/Users/meaganwaller/rubytic/lib/ttt.rb": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        null,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1375910842
+  }
+}
