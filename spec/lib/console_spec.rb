@@ -33,9 +33,13 @@ describe Console do
     end
   end
 
-  it "receives command-line input" do
+  it "receives command-line input to get player space" do
     @input.reopen('2', 'r+')
     @console.get_player_space.should == 1
+  end
+
+  it "lets user quit at anytime" do
+    lambda { @console.quit_game_anytime; exit }.should raise_error SystemExit
   end
 
   it "asks user if they want to play again" do

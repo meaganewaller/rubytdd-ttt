@@ -48,15 +48,24 @@ class Console
   end
 
   def get_player_space
-    message = "Choose the space to move: "
-    @io.valid_input = ('1'..'9').to_a
+    message = "Choose Space to Move or Press 'Q' to Quit: "
+    @io.valid_input = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Q']
     result = @io.request("\n", message)
-    result.to_i - 1
+    if result == "Q"
+      quit_game_anytime
+    else
+      result.to_i - 1
+    end
+  end
+
+  def quit_game_anytime
+    exit
   end
 
   def get_opponent_type(opponents)
     opponent_types = @view.player_opponent_list(opponents)
     message = "Choose an opponent #{opponent_types} : "
+
     @io.valid_input = (1..opponents.length).map { |v| v.to_s }
     value = @io.request("\n", message).to_i
     opponents[value - 1]
