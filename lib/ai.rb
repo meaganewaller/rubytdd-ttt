@@ -33,19 +33,32 @@ class AI
     score = win_score(board)
     if score.nil? && @current_depth < @depth_limit
       @current_depth += 1
-      next_player = current_player == @max_player ? @min_player : @max_player
+      next_player = opponent(current_player)
       space_scores = score_storage(board, next_player)
       if space_scores.has_value?(best_score(next_player))
         score = best_score(next_player)
       elsif space_scores.has_value?(nil)
         score = nil
       else
-        score = space_scores.values.__send__(next_player.eql?(@max_player) ? :max : :min)
+        score = assign_min_or_max(next_player, space_scores.values)
       end
       @current_depth -= 1
     end
     score
   end
+
+  def opponent(current_player)
+    current_player == @max_player ? @min_player : @max_player
+  end
+
+  def assign_min_or_max(next_player, space_scores)
+    if next_player.eql?(@max_player)
+      space_scores.max
+    else
+      space_scores.min
+    end
+  end
+
 
   def win_score(board)
     score = nil

@@ -16,6 +16,7 @@ class Game
 
   def play
     while !over?
+      system("clear")
       @console.display_board_available_spaces(@board)
       current_mark = @players.first
       space_choice = current_mark.place_mark(@board)
