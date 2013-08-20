@@ -7,7 +7,7 @@ class InputOutput
 
   def request(*message)
     input = nil
-    while not valid_input?(input)
+    while !valid_input?(input)
       @out.print(*message)
       input = @in.gets
       input.chomp! if input.respond_to?(:chomp)

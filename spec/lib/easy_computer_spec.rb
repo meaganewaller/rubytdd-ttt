@@ -3,39 +3,36 @@ require 'easy_computer'
 
 describe EasyComputer do
   before :all do
-    @opponent = :player
-    @easycpu = EasyComputer.new(@opponent)
+    @computer = EasyComputer.new
   end
 
-  it "has an opponent" do
-    @easycpu.opponent.should == @opponent
+  before :each do
+    @board = Board.new
   end
 
-  it "has a reference to the console" do
-    @easycpu.console = double("console")
+  it "chooses random move" do
+    @board.stub(:taken_by_marker).and_return((0..8).to_a)
+    marks = []
+    50.times do
+      marks << @computer.place_mark(@board)
+    end
+    marks.uniq.sort.should == (0..8).to_a
   end
 
-  context "making a move" do
-    before :each do
-      @board = double("board")
-      @board.should_receive(:place_mark).exactly(50).times
-      @marks = []
+  it "only makes valid spaces" do
+    @board.stub(:taken_by_marker).and_return((1..4).to_a)
+    marks = []
+    50.times do
+      marks << @computer.place_mark(@board)
     end
-    
-    it "picks a random space" do
-      @board.should_receive(:taken_by_marker).exactly(50).times.and_return((0..8).sort)
-      50.times do
-        @marks << @easycpu.place_mark(@board)
-      end
-      @marks.uniq.sort.should == (0..8).sort
-    end
+    marks.uniq.sort.should == (1..4).to_a
+  end
 
-    it "only moves in available spaces" do
-      @board.should_receive(:taken_by_marker).exactly(50).times.and_return((1..3).sort)
-      50.times do
-        @marks << @easycpu.place_mark(@board)
-      end
-      @marks.uniq.sort.should == (1..3).sort
-    end
+  it "converts to string" do
+    EasyComputer.to_s.should == "Easy Computer"
+  end
+
+  it "has reference to console" do
+    @computer.console = double("Console")
   end
 end

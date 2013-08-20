@@ -7,79 +7,135 @@ describe Console do
   before :all do
     @input = StringIO.new('', 'r+')
     @output = StringIO.new('', 'w')
-    @io = InputOutput.new
-    @io.setup(@input, @output)
-    @view = View.new
-    @view.output(@output)
     @players = [:player1, :player2]
+    @player_markers = { :player1 => :PLAYER1, :player2 => :PLAYER2 }
   end
 
   before :each do
-    @console = Console.new(@io, @view)
-    @console.set_players_markers(@players)
-    @console.out = @output
+    @input.reopen('', 'r+')
+    @output.reopen('', 'w')
+    @console = Console.new(@input, @output)
+    @io = @console.io
+    @view = @console.view
   end
 
-  describe "#new" do
-    it "assigns blank marks to blank spaces" do
-      @console.marker[Board::BLANK].should == "_"
+  describe "#set_markers" do
+    it "has io send output" do
+      @console.should_receive(:get_player_marks).and_return('X')
+      @console.set_markers(@player_markers)
+    end
+
+    it "assigns markers to players" do
+      @console.stub(:get_player_marks).and_return('X')
+      @console.set_markers(@player_markers)
+      @console.markers[:player1].should == 'X'
+      @console.markers[:player2].should == 'O'
     end
   end
 
-  describe "#set_players_markers" do
-    it "sets markers for players" do
-      @console.marker[:player1].should == "X"
-      @console.marker[:player2].should == "O"
-    end
+  it "receives command-line input" do
+    @input.reopen('2', 'r+')
+    @console.get_player_space.should == 1
   end
 
-  describe "#get_player_mark" do
-    it "gets input from command line" do
-      @input.reopen('2', 'r+')
-      @console.get_player_mark.should == 1
-    end
+  it "asks user if they want to play again" do
+    @output.should_receive(:print).exactly(4).times
+    @input.should_receive(:gets).and_return('x', 'r', '3', 'y')
+    @console.play_again.should be_true
   end
 
-  describe "#play_again?" do
-    it "asks the user to play again" do
-      @output.should_receive(:print).twice
-      @input.should_receive(:gets).and_return('l', 'y')
-      @console.play_again?.should be_true
-    end
+  it "asks user to pick a mark" do
+    @output.should_receive(:print).exactly(4).times
+    @input.should_receive(:gets).and_return('f', 'a', 'x', 'X')
+    @console.get_player_marks.should == 'X'
   end
 
-  describe "#pick_marker" do
-    it "lets user pick their marker" do
-      @output.should_receive(:print).exactly(4).times
-      @input.should_receive(:gets).and_return('p', 'r', 't', 'X')
-      @console.pick_marker.should == "X"
-    end
-  end
-
-
-  describe "#prompt_opponent_type" do
-    before :each do 
+  describe "asking user to pick opponent" do
+    before :each do
       @opponent_types = [:human, :computer]
     end
-    
+
     it "accepts valid input" do
       @input.reopen('1', 'r')
-      @console.prompt_opponent_type(@opponent_types).should == :human
+      @console.get_opponent_type(@opponent_types).should == :human
     end
 
-    it "keeps asking until valid input" do
-      @output.should_receive(:print).twice
-      @input.should_receive(:gets).and_return('0', '1')
-      @console.prompt_opponent_type(@opponent_types).should == :human
+    it "keeps asking until input is valid" do
+      @output.should_receive(:print).exactly(4).times
+      @input.should_receive(:gets).and_return('0', '4', '3', '1')
+      @console.get_opponent_type(@opponent_types).should == :human
     end
   end
 
-  describe "#get_marks" do
-    it "assigns 'X' and 'O' to players" do
-      given = { :player1 => nil, :player2 => nil }
-      expected = {:player1 => 'X', :player2 => 'O' }
-      @input.stub(:gets).and_return('X')
-      @console.get_marks(given).should == expected
+  describe "#display_winner" do
+    it "prints message of who the winner is" do
+      @console.stub(:get_player_marks).and_return('X')
+      @console.set_markers(@player_markers)
+      @player_markers.keys.each do |marker|
+        message = "Player #{@console.markers[marker]} is the winner"
+        @console.out.should_receive(:puts).with("", message)
+        @console.display_winner(marker)
+      end
+    end
   end
+
+  describe "#display_tied" do
+    it "prints message for a tied game" do
+      message = "Tied game"
+      @console.out.should_receive(:puts).with("", message)
+      @console.display_tied
+    end
+  end
+
+  describe "#get_player_order" do
+    it "gives first turn to X marker" do
+      @console.stub(:get_player_marks).and_return('X')
+      @console.set_markers({:player1 => :PLAYER1, :player2 => :PLAYER2})
+      @console.get_player_order.should == [:player1, :player2]
+      @console.stub(:get_player_marks).and_return('O')
+      @console.set_markers({:player1 => :PLAYER1, :player2 => :PLAYER2})
+      @console.get_player_order.should == [:player2, :player1]
+    end
+  end
+
+  describe "#display_board" do
+    before :each do
+      @board = double("Board").as_null_object
+      @view.stub(:board_for_view).and_return(["_|_|_", "X|O|_", "_|X|O"])
+    end
+
+    it "converts board for view on command line" do
+      @view.should_receive(:board_for_view)
+      @console.display_board(@board)
+    end
+
+    it "displays board" do
+      expected = ["     _|_|_","     X|O|_","     _|X|O"]
+      @output.should_receive(:puts).with("", *expected)
+      @console.display_board(@board)
+    end
+  end
+
+  describe "#display_board_available_spaces" do
+    before :each do
+      @board = double("Board").as_null_object
+      board_expected = ["_|_|_", "X|_|O", "O|X|_"]
+      available_expected = ["1 2 3", " 4  ", "    8"]
+      @view.stub(:board_for_view).and_return(board_expected)
+      @view.stub(:available_spaces_for_view).and_return(available_expected)
+    end
+
+    it "shows available spaces for user" do
+      @view.should_receive(:available_spaces_for_view)
+      @console.display_board_available_spaces(@board)
+    end
+
+    it "displays board with available spaces" do
+      expected = [ "     _|_|_     1 2 3",
+        "     X|_|O       4  ",
+        "     O|X|_         8"]
+      @output.should_receive(:puts).with("", *expected)
+      @console.display_board_available_spaces(@board)
+    end
   end
 end

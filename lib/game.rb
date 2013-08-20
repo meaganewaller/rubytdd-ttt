@@ -4,44 +4,46 @@ require 'easy_computer'
 require 'unbeatable_computer'
 
 class Game
-  attr_accessor :board, :players, :console, :player_types
+  attr_accessor :board, :players, :console
 
-  def initialize(console)
+  def initialize(setup)
     @board = Board.new
-    @console = console
-    @player_types = [Human,EasyComputer,UnbeatableComputer]
-    @players = []
+    @setup = setup
+    @console = @setup.console
+    @markers = @setup.player_marks
+    @players = @setup.players.clone
   end
 
   def play
-    playing = true
-    while playing do
-      @board.reset
-      set_players
-      while !over?
-        @console.display_board(@board)
-        @players.first.place_mark(@board)
-        @players.rotate!
-      end
-    @console.display_game_results(@board)
-    playing = @console.play_again?
+    while !over?
+      @console.display_board_available_spaces(@board)
+      current_mark = @players.first
+      space_choice = current_mark.place_mark(@board)
+      @board.place_mark(space_choice, @markers.key(current_mark))
+      @players.rotate!
     end
+    @console.display_board(@board)
+    display_game_results
   end
 
   def over?
-    @board.winner?(*@players) || @board.taken_by_marker(Board::BLANK).empty?
+    @board.winner?(*@markers.keys) || @board.taken_by_marker(Board::BLANK).empty?
   end
 
-  def set_players
-    @players = []
-    @players << @player_types.first.new
-    opponent_type = @console.prompt_opponent_type(@player_types)
-    if opponent_type == Human
-      @players << opponent_type.new
+  def winning_marker
+    @markers.keys.select { |marker| @board.winner?(marker)}.first
+  end
+
+  def valid_move?(space)
+    @board.taken_by_marker(Board::BLANK).include?(space)
+  end
+
+  def display_game_results
+    if @board.winner?(*@markers.keys)
+      @console.display_winner(winning_marker)
     else
-      @players << opponent_type.new(@players.first)
+      @console.display_tied
     end
-    @players.each { |player| player.console = @console }
-    @console.set_players_markers(@players)
   end
 end
+

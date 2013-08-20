@@ -1,93 +1,89 @@
 require 'board'
+require 'input_output'
+require 'view'
 class Console
-  attr_reader :marker
-  attr_accessor :out
+  attr_reader :markers, :view, :io, :in, :out
 
-  def initialize(io, view)
-    @io = io
-    @view = view
-    @marker = Hash.new
-    @marker[Board::BLANK] = "_"
-    @out = $stdout
+  def initialize(input = $stdin, output = $stdout)
+    @io = InputOutput.new
+    @io.setup(input, output)
+    @view = View.new
+    @view.set_output(output)
+    @markers = Hash.new
+    @markers[Board::BLANK] = "_"
+    @in = input
+    @out = output
   end
 
-  def set_players_markers(players)
-    @players = players.clone
-    @marker[players.first] = "X"
-    @marker[players.last] = "O"
+  def greeting
+    message = "Welcome to Tic Tac Toe, You May Quit Game at Anytime By Pressing 'Q'"
+    @out.puts("", message)
   end
 
-  def opponent_option_list(opponents)
-    "[%s]" % opponents.map.with_index { |opponent, index| "%i: %s" % [index+1, opponent]}.join(", ")
+  def set_markers(player_marks)
+    marks = player_marks.keys
+    @markers[marks.first] = get_player_marks
+    opponent_mark = (['X', 'O'] - [@markers[marks.first]]).first
+    @markers[marks.last] = opponent_mark
   end
 
-  def display_board(board)
-    print_board = @view.board_rep_view(board, @marker)
-    print_available = @view.available_spaces_for_view(board)
-    output = (0...board.size).map { |space|
-      "%10s%10s" % [print_board[space], print_available[space]]}
-      @out.puts("", *output)
-  end
-
-  def convert_board_for_commandline_view(board)
-    board.spaces.each_slice(board.size).map { |row| row.map {
-      |mark| @marker[mark]}.join("|")}
-  end
-
-  def prompt_opponent_type(opponents)
-    opponent_types = @view.players_list(opponents)
-    message = "Choose Opponent #{opponent_types} : "
-    @io.valid_input = (1..opponents.length).map { |opp| opp.to_s }
-    value = @io.request("\n", message).to_i
-    opponents[value - 1]
-  end
-
-  def pick_marker
-    message = "Please Choose Your Marker 'X' or 'O': "
-    @io.valid_input = ["X", "O"]
+  def get_player_marks
+    message = "Please choose your marker ('X' or 'O') "
+    @io.valid_input = ['X', 'O']
     @io.request("\n", message)
   end
 
-  def get_player_mark
-    message = "Choose the number corresponding with the space you'd like to move: "
+  def display_board(board)
+    displayed = @view.board_for_view(board, @markers).map { |row| "%10s" % row }
+    @out.puts("", *displayed)
+  end
+
+  def display_board_available_spaces(board)
+    displayed_board = @view.board_for_view(board, @markers)
+    displayed_available = @view.available_spaces_for_view(board)
+    displayed = (0...displayed_board.size).map { |x|
+      "%10s%10s" % [displayed_board[x], displayed_available[x]]
+    }
+    @out.puts("", *displayed)
+  end
+
+  def get_player_space
+    message = "Choose the space to move: "
     @io.valid_input = ('1'..'9').to_a
     result = @io.request("\n", message)
     result.to_i - 1
   end
 
-  def space_unavailable(space)
-    @out.puts("","Invalid Choice! Please Choose a Valid Space")
+  def get_opponent_type(opponents)
+    opponent_types = @view.player_opponent_list(opponents)
+    message = "Choose an opponent #{opponent_types} : "
+    @io.valid_input = (1..opponents.length).map { |v| v.to_s }
+    value = @io.request("\n", message).to_i
+    opponents[value - 1]
   end
 
-  def convert_available_spaces_for_commandline_view(board)
-     board.spaces.map.with_index { |space, index| space == Board::BLANK ? index + 1 : " "}.each_slice(board.size).to_a.map { |row| row.join(" ")}
+  def get_player_order
+    player_x = @markers.key('X')
+    player_o = @markers.key('O')
+    [player_x, player_o]
   end
 
-  def display_game_results(board)
-    output = @view.board_rep_view(board, @marker).map { |row| "%10s" % row }
-    message = if board.winner?(*@players)
-    winning_player = board.winner?(@players.first) ? "X" : "O" 
-    "Player #{winning_player} wins"
-              else
-                "Tied Game"
-              end
-    @out.puts("", *output, "", message)
-  end
-
-  def play_again?
-    message = "Play Again? (y/n) : "
+  def play_again
+    message = "Do you want to play again? (y/n) : "
     @io.valid_input = ['y', 'n']
-    play_again = @io.request("\n", message)
-    play_again == "y" ? true : false
+    again = @io.request("\n", message)
+    again == "y" ? true : false
   end
 
-  def get_marks(hash)
-    marks, marker = {}, ""
-    message = "Choose a mark for #{hash.values.first} ('X' or 'O'): "
-    @io.valid_input = ['X', 'O']
-    marker = @io.request("\n", message)
-    marks[hash.keys.first] = marker
-    marks[hash.keys.last] = (['X', 'O'] - [marker]).first
-   marks
+  def alert_space_invalid(space)
+    @out.puts("", "Please Pick a Valid Space")
+  end
+
+  def display_winner(player_marker)
+    @out.puts("", "Player #{@markers[player_marker]} is the winner")
+  end
+
+  def display_tied
+    @out.puts("", "Tied game")
   end
 end

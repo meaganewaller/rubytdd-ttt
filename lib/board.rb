@@ -3,7 +3,7 @@ BOARD_SIZE = 3
 class Board
   attr_reader :size, :spaces, :solutions, :markers_added
   BLANK = :blank
-  
+
   def initialize(size = BOARD_SIZE)
     @size = size
     reset
@@ -16,12 +16,12 @@ class Board
   end
 
   def place_mark(space, mark)
-    @spaces[space.to_i] = mark
+    @spaces[space] = mark
     update_markers_added
   end
 
   def is_space_available?(space)
-    space < @spaces.length && space >= 0 && @spaces[space] == BLANK 
+    space < @spaces.length && space >= 0 && @spaces[space] == BLANK
   end
 
   def taken_by_marker(mark)

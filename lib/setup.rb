@@ -1,42 +1,52 @@
 require 'human'
 require 'easy_computer'
 require 'unbeatable_computer'
+require 'board'
+
 class SetUp
   attr_reader :console, :players, :player_marks
 
   PLAYER_LIST = [Human, EasyComputer, UnbeatableComputer]
+
   def initialize(console)
     @console = console
     @players = []
     @player_marks = {}
   end
 
+  def config
+    pick_player
+    pick_opponent
+    assign_player_marks
+    assign_marks
+    assign_order
+  end
+
   def pick_player
-    @players << Human.new
+    @players[0] = Human.new
+    @players[0].console = @console
   end
 
   def pick_opponent
-    @players << @console.prompt_opponent_type(PLAYER_LIST).new
+    @players[1] = @console.get_opponent_type(PLAYER_LIST).new
+    @players[1].console = @console
   end
 
-  def assign_mark
-    @players.each_with_index { |player, index|
-      @player_marks["player#{index}".to_sym] = player}
-  end
-
-  def get_player_marks(hash)
-    marks = {}
-    if !hash.empty?
-      marker = ""
-      while ! ['X', 'O'].include?(marker) do
-        $stdout.print("\n", "Choose a marker for #{hash.values.first} ('X' or 'O') : ")
-        marker = $stdin.gets.chomp.upcase
-      end
-
-      marks[hash.keys.first] = marker
-      marks[hash.keys.last] = (['X', 'O'] - [marker]).first
+  def assign_player_marks
+    @players.each_with_index do |player, index|
+      @player_marks["player#{index}".to_sym] = player
+      player.mark = @player_marks.key(player)
     end
-    marks
   end
 
+  def assign_order
+    order = @console.get_player_order
+    @players.each_index do |index|
+      @players[index] = @player_marks[order[index]]
+    end
+  end
+
+  def assign_marks
+    @console.set_markers(@player_marks)
+  end
 end

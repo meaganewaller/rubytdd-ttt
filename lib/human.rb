@@ -1,13 +1,13 @@
-class Human 
-  attr_accessor :console
+class Human
+  attr_accessor :console, :mark
 
   def place_mark(board)
-    space = @console.get_player_mark
+    space = @console.get_player_space
     while !board.is_space_available?(space)
-      @console.space_unavailable(space)
-      space = @console.get_player_mark
+      @console.alert_space_invalid(space)
+      space = @console.get_player_space
     end
-    board.place_mark(space, self)
+    space
   end
 
   def self.to_s

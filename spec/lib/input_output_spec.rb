@@ -1,74 +1,69 @@
 require 'spec_helper'
 require 'input_output'
 
-describe InputOutput do
+describe IO do
   before :all do
     @io = InputOutput.new
   end
 
   before :each do
-    @in = StringIO.new('message', 'r+')
-    @out = StringIO.new('', 'w')
-    @io.setup(@in, @out)
+    @input = StringIO.new('input', 'r+')
+    @output = StringIO.new('', 'w')
+    @io.setup(@input, @output)
   end
 
-  it "prints a message" do
-    @out.should_receive(:print)
-    @io.request("Hello")
+  it "prints a request" do
+    @output.should_receive(:print)
+    @io.request("request")
   end
 
-  it "can accept multiple messages to print" do
-    @out.should_receive(:print).with("hello", "world")
-    @io.request("hello", "world")
+  it "accepts any number of arguments" do
+    @output.should_receive(:print).with("anything", "something")
+    @io.request("anything", "something")
   end
 
-  it "receives input" do
-    @io.request("").should == "message"
+  it "gets string from input" do
+    @io.request("").should == "input"
   end
 
-  it "has valid input" do
-    @io.valid_input = ['x', 'y']
+  it "receives valid inputs" do
+    @io.valid_input = ['a', 'b']
   end
 
-  it "doesn't allow invalid input" do
-    @io.valid_input = ['x', 'y']
-    @in.should_receive(:gets).and_return('c', 'x')
-    @io.request("").should_not == 'c'
+  it "doesnt accept invalid input" do
+    @io.valid_input = ['anything', 'something']
+    @input.should_receive(:gets).and_return('nothing','anything')
+    @io.request("").should_not == 'nothing'
   end
 
-  it "allows any input if valid input is nil" do
+  it "removes newline characters before checking for valid" do
+    @io.valid_input = ['a']
+    @input.reopen("a\n", "r")
+    @io.request("").should == 'a'
+  end
+
+  it "returns true when it's valid" do
+    @io.valid_input = ['a', 'b']
+    @io.valid_input?('b').should == true
+    @io.valid_input?('x').should == false
+  end
+
+  it "returns true if input isn't an array" do
     @io.valid_input = nil
-    @in.reopen("anything", "r+")
-    @io.request("").should == "anything"
+    @io.valid_input?("anything").should == true
   end
 
-  it "returns true when input matches #valid_input" do
-    @io.valid_input = ['x', 'y']
-    @io.valid_input?('x').should be_true
-    @io.valid_input?('p').should be_false
-  end
-
-  it "returns true if #valid_input is not Array" do
+  it "returns false if input isn't a string" do
     @io.valid_input = nil
-    @io.valid_input?(":anything!").should be_true
+    @io.valid_input?(nil).should == false
+    @io.valid_input?(1).should == false
+    @io.valid_input?(:symbol).should == false
   end
 
-  it "returns false if #valid_input is not a String" do
-    @io.valid_input = nil
-    @io.valid_input?(nil).should be_false
-    @io.valid_input?(1).should be_false
-  end
-
-  it "repeats #request until valid input" do
-    @out.should_receive(:print).with("request").exactly(3).times
-    @in.should_receive(:gets).and_return("ugh", "stop", "YES")
-    @io.valid_input = ["YES"]
-    @io.request("request").should == "YES"
-  end
-
-  it "#request new line before valid" do
-    @io.valid_input = ['x']
-    @in.reopen("x\n", 'r')
-    @io.request("").should == "x"
+  it "keeps asking until valid input" do
+    @output.should_receive(:print).with("request").exactly(4).times
+    @input.should_receive(:gets).and_return("anything", "something", "everything", "nothing")
+    @io.valid_input = ["nothing"]
+    @io.request("request").should == "nothing"
   end
 end
