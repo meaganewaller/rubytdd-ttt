@@ -4,7 +4,9 @@ Ruby TDD Tic Tac Toe for [8th Light](http://www.8thlight.com) Resident Apprentic
 
 To play the game:
 <code>$ git clone https://github.com/meaganewaller/rubytdd_ttt.git</code>
+
 <code>$ cd rubytdd_ttt</code>
+
 <code>$ ruby play_game.rb</code>
 
 Current Game Flow:
