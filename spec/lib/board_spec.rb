@@ -9,7 +9,7 @@ describe Board do
 
   describe "#new" do
     it "has a size" do
-      @board.size.should == @board_size 
+      @board.size.should == @board_size
     end
 
     it "has spaces equal to size squared" do
@@ -69,7 +69,7 @@ describe Board do
 
     it "has all the spaces a blank marker is in" do
       @board.taken_by_marker(Board::BLANK).should == (0..8).to_a
-      
+
     end
   end
 
@@ -82,7 +82,7 @@ describe Board do
     end
 
     it "initialize empty" do
-      @board.markers_added.should == [] 
+      @board.markers_added.should == []
     end
 
     it "stores player markers add to board" do

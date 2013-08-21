@@ -3,12 +3,12 @@ class AI
 
   MAX_VALUE = 1
   MIN_VALUE = -1
-
+  DEFAULT_DEPTH = 9
   attr_accessor :min_player, :max_player, :depth_limit
   attr_reader :current_depth
 
   def initialize
-    @depth_limit = 0
+    @depth_limit = DEFAULT_DEPTH
     @current_depth = 0
   end
 
