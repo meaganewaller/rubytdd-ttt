@@ -33,6 +33,6 @@ describe EasyComputer do
   end
 
   it "has reference to console" do
-    @computer.console = double("Console")
+    @computer.respond_to?(:console).should be_true
   end
 end
