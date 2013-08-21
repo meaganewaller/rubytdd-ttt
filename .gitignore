@@ -1,4 +1,6 @@
 .DS_Store
 coverage/
 tmp/
-
+Gemfile
+Gemfile.lock
+Guardfile
