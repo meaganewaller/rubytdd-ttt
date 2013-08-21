@@ -1,8 +1,11 @@
 require 'board'
 class AI
+
+  MAX_VALUE = 1
+  MIN_VALUE = -1
+
   attr_accessor :min_player, :max_player, :depth_limit
   attr_reader :current_depth
-
 
   def initialize
     @depth_limit = 0
@@ -59,15 +62,14 @@ class AI
     end
   end
 
-
   def win_score(board)
     score = nil
-    score = 1 if board.winner?(@max_player)
-    score = -1 if board.winner?(@min_player)
-    score
+    return MAX_VALUE if board.winner?(@max_player)
+    return MIN_VALUE if board.winner?(@min_player)
+    return score
   end
 
   def best_score(current_mark)
-    current_mark.eql?(@max_player) ? 1 : -1
+    current_mark.eql?(@max_player) ? MAX_VALUE : MIN_VALUE
   end
 end

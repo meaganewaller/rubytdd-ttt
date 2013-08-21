@@ -15,7 +15,6 @@ describe AI do
     @ai.current_depth.should == 0
   end
 
-
   it "returns 1 for a max winning move" do
     test_place_marks([0,1,2], :max_player)
     @ai.score(@board, :max_player).should == 1
@@ -23,6 +22,7 @@ describe AI do
 
   it "returns -1 for a min winning move" do
     test_place_marks([0,1,2], :min_player)
+    @ai.score(@board, :max_player).should == -1
   end
 
   it "has spaces with scores" do
@@ -87,12 +87,6 @@ describe AI do
       @ai.depth_limit = 6
       @ai.score_moves(@board, :max_player).should == expected_scores
     end
-
-    it "gets correct score with depth limit of seven" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1}
-      @ai.depth_limit = 7
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
   end
 
   it "replaces nil scores with zero" do
@@ -103,7 +97,6 @@ describe AI do
   end
 
   private
-
   def test_place_marks(spaces, mark)
     spaces.each do |space|
       @board.place_mark(space, mark)

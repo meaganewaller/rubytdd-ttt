@@ -10,7 +10,7 @@ describe UnbeatableComputer do
 
   before :each do
     @board = Board.new
-    @edges = [2,3,5,7]
+    @edges = [1,3,5,7]
   end
 
   it "has reference to AI" do
@@ -44,9 +44,8 @@ describe UnbeatableComputer do
   end
 
   it "has reference to console" do
-    @cpu.console = double("Console")
+    @cpu.respond_to?(:console).should be_true
   end
-
 
   it "picks winning space" do
     [0, 4, 6].each { |space| @board.place_mark(space, @cpu.mark) }
@@ -90,25 +89,11 @@ describe UnbeatableComputer do
     end
   end
 
-  describe "blocking forks" do
-    # tic tac toe strategy from wikihow on how to avoid forks
-    it "prevents forks from happening by not taking edge when opponent is in the center" do
-      [4].each { |space| @board.place_mark(space, @opponent)}
-      @cpu.place_mark(@board).should_not == @edges
-    end
-
-    it "if opponent marks edge cpu puts marks mark in opposite corner" do
-      [4].each { |space| @board.place_mark(space, @cpu.mark)}
-      [0].each { |space| @board.place_mark(space, @opponent)}
-      @cpu.place_mark(@board).should == 8 || 6
-    end
-
-    it "if opponent marks corner cpu puts mark in a way that they form diagonal" do
-      [0,4].each { |space| @board.place_mark(space, @opponent)}
-      @cpu.place_mark(@board).should == 8
-    end
+  it "doesn't get itself into a losing position" do
+    @cpu.ai.depth_limit = 9
+    @board.place_mark(4, @opponent)
+    @cpu.place_mark(@board)
   end
-
 
   it "has mark assigned to it" do
     @cpu.mark = :anything

@@ -49,7 +49,7 @@ class Console
 
   def get_player_space
     message = "Choose Space to Move or Press 'Q' to Quit: "
-    @io.valid_input = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Q']
+    @io.valid_input = ('1'..'9').to_a << "Q"
     result = @io.request("\n", message)
     if result == "Q"
       quit_game_anytime

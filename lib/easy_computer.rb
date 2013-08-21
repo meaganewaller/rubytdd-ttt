@@ -1,6 +1,6 @@
 require 'board'
 class EasyComputer
-  attr_accessor :console
+  attr_accessor :console, :mark
 
   def place_mark(board)
     board.taken_by_marker(Board::BLANK).sample
