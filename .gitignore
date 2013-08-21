@@ -4,3 +4,4 @@ tmp/
 Gemfile
 Gemfile.lock
 Guardfile
+.rspec
