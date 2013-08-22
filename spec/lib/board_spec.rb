@@ -29,11 +29,6 @@ describe Board do
     end
   end
 
-  describe "#dup" do
-    it "makes a copy of the board" do
-      @board.dup.should_not == @board
-    end
-  end
 
   describe "#place_mark" do
     it "accepts marks" do

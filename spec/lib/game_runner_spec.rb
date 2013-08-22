@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'game'
 require 'game_runner'
 require 'console'
 require 'setup'
@@ -46,7 +47,7 @@ describe GameRunner do
   end
 
   it "run continues as long as player keeps playing" do
-    @console.should_receive(:play_again).and_return(true, false)
+    @console.should_receive(:play_again).and_return(1, 0)
     @runner.run(@test_game)
   end
 end

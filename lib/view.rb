@@ -1,3 +1,4 @@
+require 'board'
 class View
   def set_output(output)
     @output = output
@@ -6,6 +7,7 @@ class View
   def board_for_view(board, hash)
     board.spaces.each_slice(board.size).map { |row| row.map {|marker| hash[marker]}.join("|")}
   end
+
 
   def available_spaces_for_view(board)
     board.spaces.map.with_index { |space, index|

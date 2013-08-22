@@ -1,7 +1,6 @@
 require 'human'
 require 'easy_computer'
 require 'unbeatable_computer'
-require 'board'
 
 class SetUp
   attr_reader :console, :players, :player_marks

@@ -15,11 +15,6 @@ class Console
     @out = output
   end
 
-  def greeting
-    message = "Welcome to Tic Tac Toe, You May Quit Game at Anytime By Pressing 'Q'"
-    @out.puts("", message)
-  end
-
   def set_markers(player_marks)
     marks = player_marks.keys
     @markers[marks.first] = get_player_marks
@@ -78,10 +73,17 @@ class Console
   end
 
   def play_again
-    message = "Do you want to play again? (y/n) : "
-    @io.valid_input = ['y', 'n']
+    message = "Would you like to [e]xit, [r]estart, or [s]tart a new game?"
+    @io.valid_input = ['e', 'r', 's']
     again = @io.request("\n", message)
-    again == "y" ? true : false
+    if again == "e"
+      again = 0
+    elsif again == "r"
+      again = 1
+    elsif again == "s"
+       again = 2
+    end
+    again
   end
 
   def alert_space_invalid(space)

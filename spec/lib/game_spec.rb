@@ -21,7 +21,7 @@ describe Game do
     end
 
     it "clones player list from setup" do
-      @setup.stub(:playres).and_return([@player1, @player2])
+      @setup.stub(:players).and_return([@player1, @player2])
       @game = Game.new(@setup)
       @game.players.should == [@player1, @player2]
     end

@@ -42,10 +42,25 @@ describe Console do
     lambda { @console.quit_game_anytime; exit }.should raise_error SystemExit
   end
 
-  it "asks user if they want to play again" do
-    @output.should_receive(:print).exactly(4).times
-    @input.should_receive(:gets).and_return('x', 'r', '3', 'y')
-    @console.play_again.should be_true
+
+  context "asking user if they want to play again" do
+    it "exits the game if user says no" do
+      @output.should_receive(:print).exactly(3).times
+      @input.should_receive(:gets).and_return("X", "2", "e")
+      @console.play_again.should == 0
+    end
+
+    it "lets user restart game with their current settings" do
+      @output.should_receive(:print).exactly(3).times
+      @input.should_receive(:gets).and_return("q", "4", "r")
+      @console.play_again.should == 1
+    end
+
+    it "lets users start up a new game" do
+      @output.should_receive(:print).exactly(3).times
+      @input.should_receive(:gets).and_return("f", "t", "s")
+      @console.play_again.should == 2
+    end
   end
 
   it "asks user to pick a mark" do

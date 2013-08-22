@@ -4,6 +4,7 @@ class AI
   MAX_VALUE = 1
   MIN_VALUE = -1
   DEFAULT_DEPTH = 9
+
   attr_accessor :min_player, :max_player, :depth_limit
   attr_reader :current_depth
 
@@ -14,7 +15,7 @@ class AI
 
   def score_moves(board, current_player)
     map = score_storage(board, current_player)
-    map.inject({}) { |result, (key, value) |
+    map.inject({}) { |result, (key, value)|
       result[key] = value.nil? ? 0 : value
       result
     }
@@ -64,12 +65,14 @@ class AI
 
   def win_score(board)
     score = nil
-    return MAX_VALUE if board.winner?(@max_player)
-    return MIN_VALUE if board.winner?(@min_player)
-    return score
+    score = MAX_VALUE if board.winner?(@max_player)
+    score = MIN_VALUE if board.winner?(@min_player)
+    score
   end
 
   def best_score(current_mark)
     current_mark.eql?(@max_player) ? MAX_VALUE : MIN_VALUE
   end
 end
+
+

@@ -14,7 +14,6 @@ class UnbeatableComputer
   end
 
   def place_mark(board)
-    @ai.depth_limit = 9
     @ai.min_player = get_opponent_mark(board)
     @ai.max_player = @mark
     space_scores = @ai.score_moves(board, @mark)

@@ -108,7 +108,7 @@ describe SetUp do
   end
 
   it "assign marks to the console" do
-    @setup.stub(:get_opponent_type).and_return(Human)
+    @console.stub(:get_opponent_type).and_return(Human)
     @setup.pick_player
     @setup.pick_opponent
     @setup.assign_player_marks
@@ -118,7 +118,7 @@ describe SetUp do
   end
 
   it "orders the players" do
-    @setup.stub(:get_opponent_type).and_return(Human)
+    @console.stub(:get_opponent_type).and_return(Human)
     @setup.pick_player
     @setup.pick_opponent
     @setup.assign_player_marks
@@ -126,5 +126,9 @@ describe SetUp do
     @console.stub(:get_player_order).and_return([:player1, :player0])
     @setup.assign_order
     @setup.players.should == original.reverse
+  end
+
+  it "stores users settings" do
+    # test to make sure that the user settings are stored for future game restarts
   end
 end

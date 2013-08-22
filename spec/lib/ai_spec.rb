@@ -5,7 +5,6 @@ require 'board'
 describe AI do
   before :each do
     @ai = AI.new
-    @ai.depth_limit = 9
     @ai.max_player = :max_player
     @ai.min_player = :min_player
     @board = Board.new
@@ -43,7 +42,7 @@ describe AI do
     before :each do
       @board = Board.new
       test_place_marks([0], :max_player)
-      test_place_marks([4,5], :min_player)
+      test_place_marks([4, 5], :min_player)
     end
 
     it "gets correct score with depth limit of zero" do
@@ -81,19 +80,6 @@ describe AI do
       @ai.depth_limit = 5
       @ai.score_moves(@board, :max_player).should == expected_scores
     end
-
-    it "gets correct score with depth limit of six" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
-      @ai.depth_limit = 6
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
-  end
-
-  it "replaces nil scores with zero" do
-    map = { 1 => nil, 2 => 1, 3 => -1, 4 => nil }
-    expected = { 1 => 0, 2 => 1, 3 => -1, 4 => 0 }
-    @ai.stub(:score_storage).and_return(map)
-    @ai.score_moves(@board, :max_player).should == expected
   end
 
   private
