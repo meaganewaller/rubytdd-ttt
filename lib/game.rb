@@ -32,7 +32,7 @@ class Game
   end
 
   def winning_marker
-    @markers.keys.select { |marker| @board.winner?(marker)}.first
+    @markers.keys.find { |marker| @board.winner?(marker) }
   end
 
   def valid_move?(space)
