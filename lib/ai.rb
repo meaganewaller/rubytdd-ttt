@@ -15,19 +15,19 @@ class AI
 
   def score_moves(board, current_player)
     map = score_storage(board, current_player)
-    map.inject({}) { |result, (key, value)|
-      result[key] = value.nil? ? 0 : value
+    map.inject({}) do |result, (key, value)|
+      result[key] = value || 0
       result
-    }
+    end
   end
 
   def score_storage(board, current_player)
     scores = Hash.new
     current_board = board.dup
     current_board.taken_by_marker(Board::BLANK).each do |space|
-      current_board.place_mark(space, current_player)
+      current_board.make_move(space, current_player)
       scores[space] = score(current_board, current_player)
-      current_board.place_mark(space, Board::BLANK)
+      current_board.make_move(space, Board::BLANK)
       break if scores[space] == best_score(current_player)
     end
     scores

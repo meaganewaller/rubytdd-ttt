@@ -15,25 +15,25 @@ describe AI do
   end
 
   it "returns 1 for a max winning move" do
-    test_place_marks([0,1,2], :max_player)
+    test_make_moves([0,1,2], :max_player)
     @ai.score(@board, :max_player).should == 1
   end
 
   it "returns -1 for a min winning move" do
-    test_place_marks([0,1,2], :min_player)
+    test_make_moves([0,1,2], :min_player)
     @ai.score(@board, :max_player).should == -1
   end
 
   it "has spaces with scores" do
-    test_place_marks([0, 3, 7], :max_player)
-    test_place_marks([1, 2, 5], :min_player)
+    test_make_moves([0, 3, 7], :max_player)
+    test_make_moves([1, 2, 5], :min_player)
     expected = {4 => -1, 6 => 1}
     @ai.score_moves(@board, :max_player).should == expected
   end
 
   it "stops scoring when best score is found" do
-    test_place_marks([0, 3, 7], :min_player)
-    test_place_marks([2, 4], :max_player)
+    test_make_moves([0, 3, 7], :min_player)
+    test_make_moves([2, 4], :max_player)
     expected = {1 => -1, 5 => -1, 6 => 1}
     @ai.score_moves(@board, :max_player).should == expected
   end
@@ -41,8 +41,8 @@ describe AI do
   context "depth limits" do
     before :each do
       @board = Board.new
-      test_place_marks([0], :max_player)
-      test_place_marks([4, 5], :min_player)
+      test_make_moves([0], :max_player)
+      test_make_moves([4, 5], :min_player)
     end
 
     it "gets correct score with depth limit of zero" do
@@ -83,9 +83,9 @@ describe AI do
   end
 
   private
-  def test_place_marks(spaces, mark)
+  def test_make_moves(spaces, mark)
     spaces.each do |space|
-      @board.place_mark(space, mark)
+      @board.make_move(space, mark)
     end
   end
 end
