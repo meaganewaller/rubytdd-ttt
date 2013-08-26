@@ -14,7 +14,7 @@ describe EasyComputer do
     @board.stub(:taken_by_marker).and_return((0..8).to_a)
     marks = []
     50.times do
-      marks << @computer.place_mark(@board)
+      marks << @computer.make_move(@board)
     end
     marks.uniq.sort.should == (0..8).to_a
   end
@@ -23,7 +23,7 @@ describe EasyComputer do
     @board.stub(:taken_by_marker).and_return((1..4).to_a)
     marks = []
     50.times do
-      marks << @computer.place_mark(@board)
+      marks << @computer.make_move(@board)
     end
     marks.uniq.sort.should == (1..4).to_a
   end

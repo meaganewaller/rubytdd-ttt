@@ -2,7 +2,7 @@ require 'board'
 class EasyComputer
   attr_accessor :console, :mark
 
-  def place_mark(board)
+  def make_move(board)
     board.taken_by_marker(Board::BLANK).sample
   end
 
