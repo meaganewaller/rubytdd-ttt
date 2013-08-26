@@ -15,7 +15,7 @@ class Board
     @markers_added = []
   end
 
-  def place_mark(space, mark)
+  def make_move(space, mark)
     @spaces[space] = mark
     update_markers_added
   end

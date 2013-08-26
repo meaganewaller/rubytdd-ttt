@@ -30,9 +30,9 @@ describe Board do
   end
 
 
-  describe "#place_mark" do
+  describe "#make_move" do
     it "accepts marks" do
-      @board.place_mark(0, :player1)
+      @board.make_move(0, :player1)
       @board.spaces[0].should == :player1
     end
   end
@@ -48,29 +48,25 @@ describe Board do
     end
 
     it "returns false is space is marked" do
-      @board.place_mark(0, :player)
+      @board.make_move(0, :player)
       @board.is_space_available?(0).should be_false
     end
   end
 
   describe "#taken_by_marker" do
     it "has all the spaces a specific marker is in" do
-      @board.place_mark(0, :player1)
-      @board.place_mark(1, :player1)
-      @board.place_mark(6, :player1)
-      @board.place_mark(8, :player1)
+      test_make_move([0,1,6,8], :player1)
       @board.taken_by_marker(:player1).should == [0,1,6,8]
     end
 
     it "has all the spaces a blank marker is in" do
       @board.taken_by_marker(Board::BLANK).should == (0..8).to_a
-
     end
   end
 
   describe "#reset" do
     it "resets each space back to BLANK" do
-      test_place_mark([3,4,5,6,7,8], :player)
+      test_make_move([3,4,5,6,7,8], :player)
       @board.reset
       @board.taken_by_marker(:player).should == []
       @board.taken_by_marker(Board::BLANK).should == (0..8).to_a
@@ -81,8 +77,8 @@ describe Board do
     end
 
     it "stores player markers add to board" do
-      test_place_mark([0,1], :player1)
-      test_place_mark([2], :player2)
+      test_make_move([0,1], :player1)
+      test_make_move([2], :player2)
       @board.markers_added.should == [:player1, :player2]
     end
   end
@@ -94,15 +90,15 @@ describe Board do
 
     it "returns true when there is a winner" do
       test_spaces = @board.solutions.flatten
-      test_place_mark(test_spaces, :player1)
+      test_make_move(test_spaces, :player1)
       @board.winner?(:player1).should be_true
     end
   end
 
   private
-  def test_place_mark(spaces, mark)
+  def test_make_move(spaces, mark)
     spaces.each do |space|
-      @board.place_mark(space, mark)
+      @board.make_move(space, mark)
     end
   end
 end
