@@ -12,13 +12,13 @@ describe Human do
   describe "#place_mark" do
     it "gets mark info from the console" do
       @console.should_receive("get_player_space").and_return(5)
-      @player.place_mark(@board)
+      @player.make_move(@board)
     end
 
     it "checks for valid mark" do
       @console.stub(:get_player_space).and_return(0, 6)
       @board.should_receive(:is_space_available?).and_return(false, true)
-      @player.place_mark(@board).should == 6
+      @player.make_move(@board).should == 6
     end
   end
 

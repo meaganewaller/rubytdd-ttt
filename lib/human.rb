@@ -1,7 +1,7 @@
 class Human
   attr_accessor :console, :mark
 
-  def place_mark(board)
+  def make_move(board)
     space = @console.get_player_space
     while !board.is_space_available?(space)
       @console.alert_space_invalid(space)
