@@ -13,7 +13,7 @@ class UnbeatableComputer
     "Unbeatable Computer"
   end
 
-  def place_mark(board)
+  def make_move(board)
     @ai.min_player = get_opponent_mark(board)
     @ai.max_player = @mark
     space_scores = @ai.score_moves(board, @mark)

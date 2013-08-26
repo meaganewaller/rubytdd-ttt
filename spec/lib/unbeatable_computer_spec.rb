@@ -26,20 +26,20 @@ describe UnbeatableComputer do
   end
 
   it "returns opposite symbol for opponent" do
-    @board.place_mark(0, :player2)
+    @board.make_move(0, :player2)
     @cpu.get_opponent_mark(@board).should == :player2
   end
 
   it "sets min_player to default value" do
     @cpu.ai.stub(:score_storage).and_return([1])
-    @cpu.place_mark(@board)
+    @cpu.make_move(@board)
     @cpu.ai.min_player.should == :opponent
   end
 
   it "sets max_player to mark" do
     @cpu.mark = :anything
     @cpu.ai.stub(:score_storage).and_return([1])
-    @cpu.place_mark(@board)
+    @cpu.make_move(@board)
     @cpu.ai.max_player.should == @cpu.mark
   end
 
@@ -48,44 +48,44 @@ describe UnbeatableComputer do
   end
 
   it "picks winning space" do
-    [0, 4, 6].each { |space| @board.place_mark(space, @cpu.mark) }
-    [2, 5, 7].each { |space| @board.place_mark(space, @opponent) }
-    @cpu.place_mark(@board).should == 3
+    [0, 4, 6].each { |space| @board.make_move(space, @cpu.mark) }
+    [2, 5, 7].each { |space| @board.make_move(space, @opponent) }
+    @cpu.make_move(@board).should == 3
   end
 
   describe "with one space left" do
     it "takes last open space" do
-      [0, 2, 4, 7].each { |space| @board.place_mark(space, @opponent) }
-      [1, 3, 6, 8].each { |space| @board.place_mark(space, @cpu.mark) }
-      @cpu.place_mark(@board).should == 5
+      [0, 2, 4, 7].each { |space| @board.make_move(space, @opponent) }
+      [1, 3, 6, 8].each { |space| @board.make_move(space, @cpu.mark) }
+      @cpu.make_move(@board).should == 5
     end
   end
 
   describe "with two spaces left" do
     it "picks winning space" do
-      [0, 2, 3, 5].each { |space| @board.place_mark(space, @opponent)}
-      [1, 4, 6].each { |space| @board.place_mark(space, @cpu.mark) }
-      @cpu.place_mark(@board).should == 7
+      [0, 2, 3, 5].each { |space| @board.make_move(space, @opponent)}
+      [1, 4, 6].each { |space| @board.make_move(space, @cpu.mark) }
+      @cpu.make_move(@board).should == 7
     end
 
     it "can block a winning move" do
-      [0, 5, 6, 8].each { |space| @board.place_mark(space, @opponent)}
-      [2, 3, 4].each { |space| @board.place_mark(space, @cpu.mark) }
-      @cpu.place_mark(@board) == 7
+      [0, 5, 6, 8].each { |space| @board.make_move(space, @opponent)}
+      [2, 3, 4].each { |space| @board.make_move(space, @cpu.mark) }
+      @cpu.make_move(@board) == 7
     end
   end
 
   describe "three spaces left" do
     it "picks a winning space" do
-      [0, 2, 3].each { |space| @board.place_mark(space, @opponent)}
-      [1, 4, 5].each { |space| @board.place_mark(space, @cpu.mark) }
-      @cpu.place_mark(@board).should == 7
+      [0, 2, 3].each { |space| @board.make_move(space, @opponent)}
+      [1, 4, 5].each { |space| @board.make_move(space, @cpu.mark) }
+      @cpu.make_move(@board).should == 7
     end
 
     it "can block a move" do
-      [0, 4, 7].each { |space| @board.place_mark(space, @opponent)}
-      [1, 3, 6].each { |space| @board.place_mark(space, @cpu.mark)}
-      @cpu.place_mark(@board).should == 8
+      [0, 4, 7].each { |space| @board.make_move(space, @opponent)}
+      [1, 3, 6].each { |space| @board.make_move(space, @cpu.mark)}
+      @cpu.make_move(@board).should == 8
     end
   end
 
