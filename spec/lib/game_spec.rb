@@ -42,15 +42,15 @@ describe Game do
     it "gets moves from player" do
       @board.stub(:winner?).and_return(false, true)
       @board.stub(:taken_by_marker).and_return([nil]*9)
-      @player1.should_receive(:place_mark)
+      @player1.should_receive(:make_move)
       @game.play
     end
 
     it "keeps getting mark until game over" do
       @board.stub(:winner?).and_return(false, false, false, false, false, false, true)
       @board.stub(:taken_by_marker).and_return([nil]*9)
-      @player1.should_receive(:place_mark).exactly(3).times
-      @player2.should_receive(:place_mark).exactly(3).times
+      @player1.should_receive(:make_move).exactly(3).times
+      @player2.should_receive(:make_move).exactly(3).times
       @game.play
     end
 
@@ -59,7 +59,7 @@ describe Game do
       @board.stub(:winner?).and_return(false, false, false, false, true)
       @board.stub(:taken_by_marker).and_return([nil]*9)
       @marks = []
-      players.each { |each| each.should_receive(:place_mark).twice {
+      players.each { |each| each.should_receive(:make_move).twice {
         @marks << @game.players.first
       }}
       @game.play

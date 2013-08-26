@@ -19,8 +19,8 @@ class Game
       system("clear")
       @console.display_board_available_spaces(@board)
       current_mark = @players.first
-      space_choice = current_mark.place_mark(@board)
-      @board.place_mark(space_choice, @markers.key(current_mark))
+      space_choice = current_mark.make_move(@board)
+      @board.make_move(space_choice, @markers.key(current_mark))
       @players.rotate!
     end
     @console.display_board(@board)
