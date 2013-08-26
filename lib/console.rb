@@ -74,16 +74,13 @@ class Console
 
   def play_again
     message = "Would you like to [e]xit, [r]estart, or [s]tart a new game?"
-    @io.valid_input = ['e', 'r', 's']
-    again = @io.request("\n", message)
-    if again == "e"
-      again = 0
-    elsif again == "r"
-      again = 1
-    elsif again == "s"
-       again = 2
-    end
-    again
+
+    game_states = { 'e' => 0, 'r' => 1, 's' => 2 }
+
+    @io.valid_input = game_states.keys
+    user_input = @io.request("\n", message)
+
+    game_states[user_input]
   end
 
   def alert_space_invalid(space)
@@ -97,4 +94,5 @@ class Console
   def display_tied
     @out.puts("", "Tied game")
   end
+
 end
