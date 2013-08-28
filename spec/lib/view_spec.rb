@@ -31,7 +31,7 @@ describe View do
   end
 
   it "has list of available opponents" do
-    expected = "[1: Human, 2: Easy Computer, 3: Unbeatable Computer]"
+    expected = "1: Human, 2: Easy Computer, 3: Unbeatable Computer"
     @view.player_opponent_list(["Human", "Easy Computer", "Unbeatable Computer"]).should == expected
   end
 

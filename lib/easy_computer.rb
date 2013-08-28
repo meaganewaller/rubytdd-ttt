@@ -3,7 +3,7 @@ class EasyComputer
   attr_accessor :console, :mark
 
   def make_move(board)
-    board.taken_by_marker(Board::BLANK).sample
+    board.spaces_taken_by_player(Board::BLANK).sample
   end
 
   def self.to_s

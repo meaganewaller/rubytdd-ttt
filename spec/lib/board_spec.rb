@@ -53,23 +53,23 @@ describe Board do
     end
   end
 
-  describe "#taken_by_marker" do
+  describe "#spaces_taken_by_player" do
     it "has all the spaces a specific marker is in" do
       test_make_move([0,1,6,8], :player1)
-      @board.taken_by_marker(:player1).should == [0,1,6,8]
+      @board.spaces_taken_by_player(:player1).should == [0,1,6,8]
     end
 
     it "has all the spaces a blank marker is in" do
-      @board.taken_by_marker(Board::BLANK).should == (0..8).to_a
+      @board.spaces_taken_by_player(Board::BLANK).should == (0..8).to_a
     end
   end
 
-  describe "#reset" do
+  describe "#reset_board" do
     it "resets each space back to BLANK" do
       test_make_move([3,4,5,6,7,8], :player)
-      @board.reset
-      @board.taken_by_marker(:player).should == []
-      @board.taken_by_marker(Board::BLANK).should == (0..8).to_a
+      @board.reset_board
+      @board.spaces_taken_by_player(:player).should == []
+      @board.spaces_taken_by_player(Board::BLANK).should == (0..8).to_a
     end
 
     it "initialize empty" do
@@ -92,6 +92,12 @@ describe Board do
       test_spaces = @board.solutions.flatten
       test_make_move(test_spaces, :player1)
       @board.winner?(:player1).should be_true
+    end
+
+    it "knows when there isnt a winner because the board is full" do
+      test_make_move([0,1,5,6,8], :player1)
+      test_make_move([2,3,4,7], :player2)
+      @board.winner?(:player1, :player2).should be_false
     end
   end
 

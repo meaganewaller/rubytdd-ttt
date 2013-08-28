@@ -16,26 +16,26 @@ describe AI do
 
   it "returns 1 for a max winning move" do
     test_make_moves([0,1,2], :max_player)
-    @ai.score(@board, :max_player).should == 1
+    @ai.find_score(@board, :max_player).should == 1
   end
 
   it "returns -1 for a min winning move" do
     test_make_moves([0,1,2], :min_player)
-    @ai.score(@board, :max_player).should == -1
+    @ai.find_score(@board, :max_player).should == -1
   end
 
-  it "has spaces with scores" do
+  it "has spaces with find_scores" do
     test_make_moves([0, 3, 7], :max_player)
     test_make_moves([1, 2, 5], :min_player)
     expected = {4 => -1, 6 => 1}
-    @ai.score_moves(@board, :max_player).should == expected
+    @ai.assign_scores_to_moves(@board, :max_player).should == expected
   end
 
-  it "stops scoring when best score is found" do
+  it "stops scoring when best find_score is found" do
     test_make_moves([0, 3, 7], :min_player)
     test_make_moves([2, 4], :max_player)
     expected = {1 => -1, 5 => -1, 6 => 1}
-    @ai.score_moves(@board, :max_player).should == expected
+    @ai.assign_scores_to_moves(@board, :max_player).should == expected
   end
 
   context "depth limits" do
@@ -45,40 +45,16 @@ describe AI do
       test_make_moves([4, 5], :min_player)
     end
 
-    it "gets correct score with depth limit of zero" do
+    it "gets correct find_score with depth limit of zero" do
       expected_scores = { 1 => 0, 2 => 0, 3 => 0, 6 => 0, 7 => 0, 8 => 0 }
       @ai.depth_limit = 0
-      @ai.score_moves(@board, :max_player).should == expected_scores
+      @ai.assign_scores_to_moves(@board, :max_player).should == expected_scores
     end
 
-    it "gets correct score with depth limit of one" do
+    it "gets correct find_score with depth limit of one" do
       expected_scores = { 1=> -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
       @ai.depth_limit = 1
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
-
-    it "gets correct score with depth limit of two" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
-      @ai.depth_limit = 2
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
-
-    it "gets correct score with depth limit of three" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
-      @ai.depth_limit = 3
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
-
-    it "gets correct score with depth limit of four" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
-      @ai.depth_limit = 4
-      @ai.score_moves(@board, :max_player).should == expected_scores
-    end
-
-    it "gets correct score with depth limit of five" do
-      expected_scores = { 1 => -1, 2 => -1, 3 => 0, 6 => -1, 7 => -1, 8 => -1 }
-      @ai.depth_limit = 5
-      @ai.score_moves(@board, :max_player).should == expected_scores
+      @ai.assign_scores_to_moves(@board, :max_player).should == expected_scores
     end
   end
 

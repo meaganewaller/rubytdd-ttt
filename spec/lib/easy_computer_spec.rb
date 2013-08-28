@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'easy_computer'
 
+TIMES = 50
 describe EasyComputer do
   before :all do
     @computer = EasyComputer.new
@@ -11,18 +12,18 @@ describe EasyComputer do
   end
 
   it "chooses random move" do
-    @board.stub(:taken_by_marker).and_return((0..8).to_a)
+    @board.stub(:spaces_taken_by_player).and_return((0..8).to_a)
     marks = []
-    50.times do
+    TIMES.times do
       marks << @computer.make_move(@board)
     end
     marks.uniq.sort.should == (0..8).to_a
   end
 
   it "only makes valid spaces" do
-    @board.stub(:taken_by_marker).and_return((1..4).to_a)
+    @board.stub(:spaces_taken_by_player).and_return((1..4).to_a)
     marks = []
-    50.times do
+    TIMES.times do
       marks << @computer.make_move(@board)
     end
     marks.uniq.sort.should == (1..4).to_a

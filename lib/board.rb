@@ -6,11 +6,11 @@ class Board
 
   def initialize(size = BOARD_SIZE)
     @size = size
-    reset
+    reset_board
     winning_solutions
   end
 
-  def reset
+  def reset_board
     @spaces = [BLANK]*@size.to_i ** 2
     @markers_added = []
   end
@@ -24,15 +24,15 @@ class Board
     space < @spaces.length && space >= 0 && @spaces[space] == BLANK
   end
 
-  def taken_by_marker(mark)
+  def spaces_taken_by_player(mark)
     @spaces.map.with_index { |marker, index| index if marker == mark }.compact
   end
 
   def winner?(*marks)
     has_winner = false
     marks.each do |mark|
-      taken_spaces = taken_by_marker(mark)
-      @solutions.each { |solution| has_winner |= (solution - taken_spaces).empty? }
+      taken_spaces = spaces_taken_by_player(mark)
+      @solutions.each { |solution| has_winner ||= (solution - taken_spaces).empty? }
     end
     has_winner
   end

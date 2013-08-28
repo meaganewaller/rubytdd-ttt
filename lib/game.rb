@@ -10,7 +10,7 @@ class Game
     @board = Board.new
     @setup = setup
     @console = @setup.console
-    @markers = @setup.player_marks
+    @symbols = @setup.player_symbols
     @players = @setup.players.clone
   end
 
@@ -20,7 +20,7 @@ class Game
       @console.display_board_available_spaces(@board)
       current_mark = @players.first
       space_choice = current_mark.make_move(@board)
-      @board.make_move(space_choice, @markers.key(current_mark))
+      @board.make_move(space_choice, @symbols.key(current_mark))
       @players.rotate!
     end
     @console.display_board(@board)
@@ -28,11 +28,11 @@ class Game
   end
 
   def over?
-    @board.winner?(*@markers.keys) || @board.taken_by_marker(Board::BLANK).empty?
+    @board.winner?(*@symbols.keys) || @board.spaces_taken_by_player(Board::BLANK).empty?
   end
 
-  def winning_marker
-    @markers.keys.find { |marker| @board.winner?(marker) }
+  def winning_player
+    @symbols.keys.find { |marker| @board.winner?(marker) }
   end
 
   def valid_move?(space)
@@ -40,8 +40,8 @@ class Game
   end
 
   def display_game_results
-    if @board.winner?(*@markers.keys)
-      @console.display_winner(winning_marker)
+    if @board.winner?(*@symbols.keys)
+      @console.display_winner(winning_player)
     else
       @console.display_tied
     end

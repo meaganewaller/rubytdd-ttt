@@ -16,7 +16,7 @@ class UnbeatableComputer
   def make_move(board)
     @ai.min_player = get_opponent_mark(board)
     @ai.max_player = @mark
-    space_scores = @ai.score_moves(board, @mark)
+    space_scores = @ai.assign_scores_to_moves(board, @mark)
     space_scores.sort_by { |space, score| score}.last[0]
   end
 

@@ -23,7 +23,7 @@ describe SetUp do
     end
 
     it "has empty markers for players " do
-      @setup.player_marks.should == {}
+      @setup.player_symbols.should == {}
     end
   end
 
@@ -82,23 +82,23 @@ describe SetUp do
       @player2.stub(:new).and_return(@player2)
       @setup.pick_player
       @setup.pick_opponent
-      @setup.assign_player_marks
+      @setup.assign_player_symbols
     end
 
     it "assigns marks by player index" do
-      @setup.player_marks[:player0].should == @setup.players[0]
-      @setup.player_marks[:player1].should == @setup.players[1]
+      @setup.player_symbols[:player0].should == @setup.players[0]
+      @setup.player_symbols[:player1].should == @setup.players[1]
     end
 
     it "assigns unique marker to each player" do
       @setup.players.each do |player|
-        @setup.player_marks.should have_value(player)
+        @setup.player_symbols.should have_value(player)
       end
     end
   end
 
   it "calls config methods in sequence" do
-    method_sequence = [:pick_player, :pick_opponent, :assign_player_marks, :assign_marks]
+    method_sequence = [:pick_player, :pick_opponent, :assign_player_symbols, :assign_marks]
     call_sequence = []
     method_sequence.each do |method|
       @setup.should_receive(method) { call_sequence << method }
@@ -111,8 +111,8 @@ describe SetUp do
     @console.stub(:get_opponent_type).and_return(Human)
     @setup.pick_player
     @setup.pick_opponent
-    @setup.assign_player_marks
-    markers = @setup.player_marks
+    @setup.assign_player_symbols
+    markers = @setup.player_symbols
     @console.should_receive(:set_markers).with(markers)
     @setup.assign_marks
   end
@@ -121,10 +121,10 @@ describe SetUp do
     @console.stub(:get_opponent_type).and_return(Human)
     @setup.pick_player
     @setup.pick_opponent
-    @setup.assign_player_marks
+    @setup.assign_player_symbols
     original = @setup.players.clone
     @console.stub(:get_player_order).and_return([:player1, :player0])
-    @setup.assign_order
+    @setup.assign_player_order
     @setup.players.should == original.reverse
   end
 

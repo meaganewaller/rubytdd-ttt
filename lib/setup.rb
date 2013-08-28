@@ -3,22 +3,22 @@ require 'easy_computer'
 require 'unbeatable_computer'
 
 class SetUp
-  attr_reader :console, :players, :player_marks
+  attr_reader :console, :players, :player_symbols
 
   PLAYER_LIST = [Human, EasyComputer, UnbeatableComputer]
 
   def initialize(console)
     @console = console
     @players = []
-    @player_marks = {}
+    @player_symbols = {}
   end
 
   def config
     pick_player
     pick_opponent
-    assign_player_marks
+    assign_player_symbols
     assign_marks
-    assign_order
+    assign_player_order
   end
 
   def pick_player
@@ -31,21 +31,21 @@ class SetUp
     @players[1].console = @console
   end
 
-  def assign_player_marks
+  def assign_player_symbols
     @players.each_with_index do |player, index|
-      @player_marks["player#{index}".to_sym] = player
-      player.mark = @player_marks.key(player)
-    end
-  end
-
-  def assign_order
-    order = @console.get_player_order
-    @players.each_index do |index|
-      @players[index] = @player_marks[order[index]]
+      @player_symbols["player#{index}".to_sym] = player
+      player.mark = @player_symbols.key(player)
     end
   end
 
   def assign_marks
-    @console.set_markers(@player_marks)
+    @console.set_markers(@player_symbols)
+  end
+
+  def assign_player_order
+    order = @console.get_player_order
+    @players.each_index do |index|
+      @players[index] = @player_symbols[order[index]]
+    end
   end
 end

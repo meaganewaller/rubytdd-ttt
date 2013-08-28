@@ -12,7 +12,7 @@ class GameRunner
       this_game.play
       keep_playing = @setup.console.play_again
       while keep_playing == 1
-        this_game.board.reset
+        this_game.board.reset_board
         this_game.play
         keep_playing = @setup.console.play_again
       end
