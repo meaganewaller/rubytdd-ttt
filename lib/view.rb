@@ -18,6 +18,8 @@ class View
   end
 
   def player_opponent_list(players)
-    players.map.with_index { |player, index| "#{index + 1}: #{player}" }.join(', ')
+    players.map.with_index do |player, index|
+      "#{index + 1}: #{player}"
+    end.join(', ')
   end
 end

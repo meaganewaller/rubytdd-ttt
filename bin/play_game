@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'game'
+require 'setup'
+require 'console'
+require 'input_output'
+require 'view'
+require 'game_runner'
+
+console = Console.new($stdin, $stdout)
+setup = SetUp.new(console)
+runner = GameRunner.new(setup)
+runner.run(Game)

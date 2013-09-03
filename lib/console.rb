@@ -43,8 +43,8 @@ class Console
   end
 
   def get_player_space
-    message = "Choose Space to Move or Press 'Q' to Quit: "
-    @io.valid_input = ('1'..'9').to_a << "Q"
+    message = "Pick a Space to Move or Press 'Q' to Quit : "
+    @io.valid_input = ('1'..'9').to_a.push('Q')
     result = @io.request("\n", message)
     if result == "Q"
       quit_game_anytime
@@ -73,7 +73,7 @@ class Console
   end
 
   def play_again
-    message = "Would you like to [e]xit, [r]estart, or [s]tart a new game?"
+    message = "Would you like to [e]xit, [r]estart, or [s]tart a new game? "
 
     game_states = { 'e' => 0, 'r' => 1, 's' => 2 }
 
@@ -94,5 +94,4 @@ class Console
   def display_tied
     @out.puts("", "Tied game")
   end
-
 end

@@ -8,13 +8,12 @@ To play the game:
 
 <code>$ cd rubytdd_ttt</code>
 
-<code>$ ruby play_game.rb</code>
+<code>$ ruby bin/play_game</code>
 
 Current Game Flow:
 
 1. Pick an opponent (Human, Easy Computer, Unbeatable Computer)
 2. Pick a marker (X or O) X goes first, O goes second.
 3. Place moves on the board, or have the option of pressing Q to exit the game.
-4. If you play entire game you're prompted to play again, respond with y/n
-
+4. After finishing the game you can either Exit, Restart with the Same Settings (Loser Goes First), Start Over and Pick New Settings
 
